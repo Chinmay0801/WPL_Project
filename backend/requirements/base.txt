@@ -1,0 +1,26 @@
+# Core
+django>=4.2,<6
+djangorestframework>=3.14
+django-cors-headers>=4.0
+psycopg2-binary>=2.9
+
+# Async / Task Queue
+celery[redis]>=5.3
+redis>=5.0
+
+# Environment
+python-dotenv>=1.0
+
+# AI / LLM
+langchain>=0.1
+langchain-openai>=0.0.5
+langchain-google-genai>=0.0.5
+openai>=1.0
+google-generativeai>=0.3
+
+# Data Providers
+yfinance>=0.2
+requests>=2.31
+
+# Auth (Token-based)
+djangorestframework-authtoken>=0.1

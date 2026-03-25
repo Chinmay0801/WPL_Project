@@ -1,38 +1,103 @@
-# Agentic Stock Research & Analysis Platform
+# 📊 Agentic Stock Research & Analysis Platform
 
-This is the repository for the Agentic Stock Research & Analysis Platform, an autonomous financial analyst application powered by AI.
+An autonomous financial analyst powered by AI agents. The platform automates stock research by gathering market data, performing analysis, and providing clear investment insights.
 
-## Project Overview
+## Tech Stack
 
-This platform uses AI-driven agents to automate stock research by analyzing SEC filings, earnings transcripts, historical financials, real-time market data, and news sentiment. Multiple specialized AI agents collaborate to generate comprehensive institutional-grade research reports.
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| Backend | Django + DRF | REST API & database management |
+| Async Queue | Celery + Redis | Background agent tasks |
+| Database | PostgreSQL | User data & research reports |
+| AI Core | LangChain + OpenAI/Gemini | Multi-agent reasoning |
+| Data Providers | Yahoo Finance, Alpha Vantage | Real-time market data |
+| Frontend | React + Vite | User dashboard |
 
-### Tech Stack
+## Quick Start
 
-- **Backend Framework:** Django (Python) - Serves the API and manages the database.
-- **Asynchronous Queue:** Celery & Redis - Handles long-running background processes (e.g., agent research, web scraping).
-- **Database:** PostgreSQL - Relational database for storing user data and research reports.
-- **AI Core:** LangChain / LlamaIndex + LLMs (OpenAI, Gemini) - Orchestrates multi-agent reasoning.
-- **Data Providers:** Alpha Vantage, Yahoo Finance, News APIs.
-- **Frontend:** React.js / Vue.js - Dynamic user dashboard interacting with Django REST Framework.
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Git](https://git-scm.com/)
 
-## Team Members (Team J)
+### Setup
 
-- Chinmay Deshpande (230905264)
-- Param Mehta (230905260)
-- Nirav Shetty (230905213)
+```bash
+# 1. Clone the repo
+git clone https://github.com/YOUR_USERNAME/WPL_Project.git
+cd WPL_Project
 
-## Git Collaboration Guidelines
+# 2. Create your .env file
+cp .env.example .env
+# Edit .env with your API keys
 
-To work together on this project, please follow these guidelines:
+# 3. Start everything with Docker
+docker-compose up --build
 
-1. **Clone the repository**: `git clone <repository_url>`
-2. **Create a branch for your feature**: `git checkout -b feature/your-feature-name` (e.g., `feature/auth`, `bugfix/login-issue`)
-3. **Commit your changes regularly**: Provide clear and concise commit messages.
-   - Example: `git commit -m "Add Celery setup for background tasks"`
-4. **Push your branch to the remote repository**: `git push origin feature/your-feature-name`
-5. **Create a Pull Request (PR)**: Merging shouldn't be done directly to the `main` branch. Create a PR, and have another team member review your changes before merging.
+# 4. In another terminal, run migrations
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+```
 
-### Before Committing
+### Access
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000/api/
+- **Admin Panel**: http://localhost:8000/admin/
 
-- Ensure you are not committing sensitive information (like API keys, `.env` files).
-- The provided `.gitignore` file should prevent accidental commits of compiled code, virtual environments, and Node modules, but always verify using `git status` before `git add`.
+### Without Docker (Manual)
+
+```bash
+# Backend
+cd backend
+python -m venv venv
+venv\Scripts\activate        # Windows
+pip install -r requirements/dev.txt
+python manage.py migrate
+python manage.py runserver
+
+# Frontend (separate terminal)
+cd frontend
+npm install
+npm run dev
+```
+
+## Project Structure
+
+```
+├── backend/
+│   ├── config/          # Django settings, Celery, URLs
+│   ├── apps/
+│   │   ├── users/       # Auth & user management
+│   │   ├── research/    # Research reports
+│   │   ├── agents/      # AI agent orchestration
+│   │   └── market_data/ # Market data & news
+│   └── requirements/
+├── frontend/
+│   └── src/
+│       ├── components/  # Reusable UI components
+│       ├── pages/       # Dashboard, Report, Login
+│       └── services/    # API client
+├── docker-compose.yml
+└── .env.example
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/users/register/` | Register new user |
+| GET | `/api/users/profile/` | Get current user profile |
+| GET/POST | `/api/research/reports/` | List/create research reports |
+| GET | `/api/research/tickers/` | List stock tickers |
+| GET | `/api/agents/runs/` | List AI agent runs |
+| GET | `/api/market-data/snapshots/` | Market data snapshots |
+| GET | `/api/market-data/news/` | News articles |
+
+## Team
+
+| Member | Focus |
+|--------|-------|
+| Teammate 1 | Backend API & Database |
+| Teammate 2 | AI Agents & Data Providers |
+| Teammate 3 | Frontend Dashboard |
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for workflow guidelines.

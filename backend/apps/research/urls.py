@@ -1,0 +1,13 @@
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
+
+app_name = 'research'
+
+router = DefaultRouter()
+router.register('tickers', views.StockTickerViewSet, basename='ticker')
+router.register('reports', views.ResearchReportViewSet, basename='report')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
