@@ -43,9 +43,9 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
             status='pending',
         )
 
-        # TODO: Kick off Celery task here
-        # from apps.agents.tasks import run_research_pipeline
-        # run_research_pipeline.delay(report.id)
+        # Kick off Celery task
+        from apps.agents.tasks import run_research_pipeline
+        run_research_pipeline.delay(report.id)
 
         serializer = ResearchReportSerializer(report)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -21,6 +21,3 @@ google-generativeai>=0.3
 # Data Providers
 yfinance>=0.2
 requests>=2.31
-
-# Auth (Token-based)
-djangorestframework-authtoken>=0.1
