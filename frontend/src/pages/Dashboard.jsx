@@ -4,116 +4,6 @@ import { useAuth } from '../context/AuthContext'
 import { ToastContainer, useToast } from '../components/Toast'
 import './Dashboard.css'
 
-// ─── Mock Research Data Generator ────────────────────────────────────────
-export function generateMockReport(ticker, query) {
-  const companies = {
-    AAPL: { name: 'Apple Inc.', sector: 'Technology', price: 198.45, pe: 32.1, high52: 237.23, low52: 164.08, diff1d: '+1.2%', diff1w: '+3.4%', mcap: '3.08T' },
-    MSFT: { name: 'Microsoft Corp.', sector: 'Technology', price: 428.50, pe: 37.8, high52: 468.35, low52: 309.45, diff1d: '-0.5%', diff1w: '+1.8%', mcap: '3.18T' },
-    GOOGL: { name: 'Alphabet Inc.', sector: 'Technology', price: 175.20, pe: 26.4, high52: 191.75, low52: 120.21, diff1d: '+2.1%', diff1w: '+4.0%', mcap: '2.17T' },
-    AMZN: { name: 'Amazon.com Inc.', sector: 'Consumer Cyclical', price: 192.80, pe: 62.3, high52: 201.20, low52: 118.35, diff1d: '+0.8%', diff1w: '-1.2%', mcap: '2.01T' },
-    TSLA: { name: 'Tesla Inc.', sector: 'Automotive', price: 248.90, pe: 72.5, high52: 299.29, low52: 138.80, diff1d: '-2.4%', diff1w: '-5.6%', mcap: '792B' },
-    NVDA: { name: 'NVIDIA Corp.', sector: 'Technology', price: 875.30, pe: 68.2, high52: 974.00, low52: 298.06, diff1d: '+4.5%', diff1w: '+12.4%', mcap: '2.31T' },
-    TCS: { name: 'Tata Consultancy Services', sector: 'Technology', price: 3950.20, pe: 30.5, high52: 4200.00, low52: 3100.00, diff1d: '+0.5%', diff1w: '+1.2%', mcap: '14.5T INR' },
-    INFY: { name: 'Infosys Ltd.', sector: 'Technology', price: 1480.50, pe: 24.2, high52: 1730.00, low52: 1215.00, diff1d: '-1.2%', diff1w: '-0.8%', mcap: '6.1T INR' },
-    RELIANCE: { name: 'Reliance Industries', sector: 'Conglomerate', price: 2950.80, pe: 28.4, high52: 3024.00, low52: 2220.00, diff1d: '+1.8%', diff1w: '+4.5%', mcap: '19.9T INR' },
-  }
-
-  const sym = ticker.toUpperCase()
-  const info = companies[sym] || {
-    name: `${sym} Corp.`,
-    sector: 'Mixed',
-    price: (Math.random() * 500 + 50).toFixed(2),
-    pe: (Math.random() * 40 + 8).toFixed(1),
-    high52: (Math.random() * 600 + 100).toFixed(2),
-    low52: (Math.random() * 200 + 30).toFixed(2),
-    diff1d: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 3).toFixed(1)}%`,
-    diff1w: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 8).toFixed(1)}%`,
-    mcap: `${(Math.random() * 100).toFixed(1)}B`
-  }
-
-  return {
-    id: Date.now(),
-    ticker_symbol: sym,
-    company_name: info.name,
-    query: query,
-    status: 'completed',
-    created_at: new Date().toISOString(),
-    snapshot: {
-      price: info.price,
-      mcap: info.mcap,
-      pe: info.pe,
-      diff1d: info.diff1d,
-      diff1w: info.diff1w,
-      recommendation: parseFloat(info.pe) > 40 ? 'HOLD' : parseFloat(info.pe) < 25 ? 'BUY' : 'BUY',
-    },
-    // Simple AI Summary
-    summary: {
-      text: `${info.name} is showing steady performance in the ${info.sector} sector. Analysts note consistent growth with manageable risk levels.`,
-      bullets: [
-        `Revenue Trend: 📈 Showing strong YoY growth of ${(Math.random() * 15 + 5).toFixed(1)}%`,
-        `Profit Trend: ${parseFloat(info.pe) < 30 ? '📈 Margins are expanding' : '→ Margins remain stable'}`,
-        `Risk Factors: Susceptible to macro headwinds and sector volatility.`,
-        `Growth Potential: Investing heavily in emerging technologies and R&D.`,
-      ]
-    },
-    fundamental_analysis: {
-      summary: `${info.name} shows solid fundamentals with a P/E ratio of ${info.pe}. Revenue growth remains strong with healthy operating margins.`,
-      strengths: [
-        'Strong brand moat and market positioning',
-        'Consistent revenue growth over the past 5 years',
-        'Healthy cash flow generation and reserves',
-        'Strategic investments in AI and emerging technologies',
-      ],
-      weaknesses: [
-        'Elevated P/E ratio relative to sector average',
-        'Increasing regulatory scrutiny in key markets',
-        'Dependency on single product line for majority revenue',
-      ],
-      metrics: {
-        pe_ratio: parseFloat(info.pe),
-        current_price: parseFloat(info.price),
-        '52w_high': parseFloat(info.high52),
-        '52w_low': parseFloat(info.low52),
-        roi_estimate: `${(Math.random() * 15 + 5).toFixed(1)}%`,
-        debt_to_equity: (Math.random() * 1.5 + 0.2).toFixed(2),
-      },
-      verdict: parseFloat(info.pe) > 35 ? 'Hold' : 'Buy',
-    },
-    sentiment_analysis: {
-      sentiment_score: parseFloat((Math.random() * 1.2 - 0.2).toFixed(2)),
-      mood: Math.random() > 0.4 ? 'Bullish' : 'Cautiously Optimistic',
-      headlines: [
-        { text: `${info.name} beats quarterly earnings estimates, shares rally.`, label: 'Positive', sentiment: 'positive' },
-        { text: `Analysts upgrade ${sym} target price citing strong fundamental moat.`, label: 'Positive', sentiment: 'positive' },
-        { text: `Macro headwinds pose temporary challenge to ${info.sector} margins.`, label: 'Neutral', sentiment: 'neutral' },
-        { text: `Regulatory bodies hint at stricter compliance for ${sym}.`, label: 'Negative', sentiment: 'negative' },
-      ],
-      buzz_level: Math.random() > 0.5 ? 'High' : 'Medium',
-      summary: `Market sentiment for ${sym} is predominantly positive, driven by strong earnings reports and strategic AI investments.`,
-    },
-    risk_assessment: {
-      risk_level: parseFloat(info.pe) > 50 ? 'High' : parseFloat(info.pe) < 20 ? 'Low' : 'Medium',
-      warnings: [
-        'Macroeconomic uncertainty may impact consumer spending',
-        'Geopolitical risks in key supply chain regions',
-        'Competitive pressure from emerging players',
-        'Interest rate environment affecting growth valuations',
-      ],
-      risk_summary: `${sym} carries ${parseFloat(info.pe) > 50 ? 'high' : 'moderate'} risk primarily driven by valuation concerns and macro headwinds.`,
-      volatility_index: (Math.random() * 30 + 15).toFixed(1),
-    },
-    valuation: {
-      valuation_status: parseFloat(info.pe) > 40 ? 'Slightly Overvalued' : parseFloat(info.pe) < 15 ? 'Undervalued' : 'Fairly Valued',
-      fair_price_estimate: `$${(parseFloat(info.price) * (0.9 + Math.random() * 0.3)).toFixed(2)} - $${(parseFloat(info.price) * (1.1 + Math.random() * 0.2)).toFixed(2)}`,
-      reasoning: `Based on DCF analysis and peer comparison, ${sym} appears to be ${parseFloat(info.pe) > 40 ? 'trading at a premium' : 'reasonably priced'} relative to its intrinsic value.`,
-    },
-    chart_data: Array.from({ length: 30 }).map((_, i) => ({
-      name: `Day ${i + 1}`,
-      price: parseFloat((parseFloat(info.price) * (0.9 + Math.random() * 0.2)).toFixed(2)),
-    })),
-  }
-}
-
 const PIPELINE_STEPS = [
   { key: 'fetch', label: 'Fetching market data', icon: '📡' },
   { key: 'fundamental', label: 'Analyzing fundamentals', icon: '📊' },
@@ -196,17 +86,36 @@ function Dashboard() {
     try {
       for (let i = 0; i < PIPELINE_STEPS.length; i++) {
         setPipelineStep(i)
-        await new Promise((r) => setTimeout(r, 600 + Math.random() * 400))
+        // Shorter delay since we actually make a network call now
+        await new Promise((r) => setTimeout(r, 400 + Math.random() * 200))
       }
 
-      const report = generateMockReport(targetTicker, query || `Comprehensive analysis of ${targetTicker.toUpperCase()}`)
+      // Fetch from DJANGO local server!
+      const response = await fetch('http://localhost:8000/api/research/quick-demo/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ticker: targetTicker.toUpperCase(),
+          query: query || `Comprehensive analysis of ${targetTicker.toUpperCase()}`
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch from Django server.')
+      }
+
+      const report = await response.json()
+      
       setReports([report, ...reports])
       setQuery('')
       setTicker('')
       setSmartSuggestions([])
-      addToast(`Research report for ${targetTicker.toUpperCase()} generated successfully!`, 'success')
+      addToast(`Research report for ${targetTicker.toUpperCase()} generated by Django!`, 'success')
     } catch (error) {
-      addToast('Failed to generate research report.', 'error')
+      console.error(error)
+      addToast('Failed to connect to Django server. Is it running?', 'error')
     }
 
     setLoading(false)
@@ -290,13 +199,13 @@ function Dashboard() {
                 </div>
               </div>
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? <><span className="spinner"></span> Running Pipeline...</> : '⚡ Start Research'}
+                {loading ? <><span className="spinner"></span> Calling Django API...</> : '⚡ Start Research'}
               </button>
             </form>
 
             {/* Pipeline Progress */}
             {loading && (
-              <div className="pipeline-progress" id="pipeline-progress">
+               <div className="pipeline-progress" id="pipeline-progress">
                 {PIPELINE_STEPS.map((step, i) => (
                   <div key={step.key} className={`pipeline-step ${ i < pipelineStep ? 'step-done' : i === pipelineStep ? 'step-active' : 'step-pending' }`}>
                     <span className="step-icon">{i < pipelineStep ? '✅' : step.icon}</span>
@@ -318,7 +227,7 @@ function Dashboard() {
               <div className="empty-state card-static">
                 <div className="empty-icon">📈</div>
                 <h3>No research reports yet</h3>
-                <p>Enter a stock ticker above and click "Start Research" to generate your first AI-powered analysis.</p>
+                <p>Enter a stock ticker above and click "Start Research" to safely test the Django backend connection.</p>
               </div>
             ) : (
               <div className="reports-grid">

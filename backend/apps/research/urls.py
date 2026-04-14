@@ -9,5 +9,6 @@ router.register('tickers', views.StockTickerViewSet, basename='ticker')
 router.register('reports', views.ResearchReportViewSet, basename='report')
 
 urlpatterns = [
+    path('quick-demo/', views.quick_demo_report, name='quick-demo'),
     path('', include(router.urls)),
 ]
